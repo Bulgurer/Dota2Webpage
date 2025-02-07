@@ -1,7 +1,7 @@
 ---
 name: Feature request
 about: Suggest an idea for this project
-title: "[US X.XX.X - NAME]"
+title: US X.XX.X - NAME
 labels: enhancement
 assignees: Bulgurer
 
