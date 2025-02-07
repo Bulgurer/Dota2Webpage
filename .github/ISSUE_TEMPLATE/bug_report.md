@@ -1,8 +1,8 @@
 ---
 name: Bug report
 about: Create a report to help us improve
-title: "[BUG #X]"
-labels: bug
+title: BUG - NAME
+labels: bug, enhancement
 assignees: Bulgurer
 
 ---
