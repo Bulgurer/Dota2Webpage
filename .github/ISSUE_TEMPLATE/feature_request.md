@@ -1,9 +1,9 @@
 ---
-name: 'Feature request'
-about: 'Suggest an idea for this project'
-title: 'US X.XX.X - NAME'
-labels: 'enhancement'
-assignees: 'Bulgurer'
+name: Feature request
+about: Suggest an idea for this project
+title: US X.XX.X - NAME
+labels: enhancement
+assignees: Bulgurer
 
 ---
 
