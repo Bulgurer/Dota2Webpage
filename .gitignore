@@ -1,2 +1,2 @@
 # Ignoring this because it has my API key in it
-config.js
+secrets.js
