@@ -3,7 +3,8 @@
 }
 
 #hero-section {
-    background-color: green;
+    background: rgb(8,153,4);
+    background: linear-gradient(90deg, rgba(8,153,4,1) 0%, rgba(9,18,121,1) 50%, rgba(255,0,0,1) 100%);
     padding: 20px;
     margin: 20px;
     border-radius: 10px;
