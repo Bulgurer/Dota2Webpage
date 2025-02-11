@@ -1,24 +1,27 @@
-
+// API Constants
 const STRATZ_API_KEY = CONFIG.STRATZ_API_KEY; // Temporary solution to access the API key from config.js
-
-const buttonNewHero = document.querySelector('#button-new-hero');
-const heroImage = document.querySelector('#hero-image');
-const heroName = document.querySelector('#hero-name');
-const heroDescription = document.querySelector('#hero-description');
-const heroSection = document.querySelector('#hero-section');
-
-buttonNewHero.onclick = pickNewHero;
-
 const stratz = 'https://api.stratz.com/api/v1/Hero';
 const stratzHeaders = new Headers({
     'Content-Type': 'application/json',
     Authorization: 'Bearer ' + STRATZ_API_KEY,
     UserAgent: 'STRATZ_API'
 });
-
 const cloudflare = 'https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/heroes/';
 
+// DOM Elements
+const buttonNewHero = document.querySelector('#button-new-hero');
+const heroImage = document.querySelector('#hero-image');
+const heroName = document.querySelector('#hero-name');
+const heroDescription = document.querySelector('#hero-description');
+const heroSection = document.querySelector('#hero-section');
 
+// Event Listeners
+buttonNewHero.onclick = pickNewHero;
+
+
+/**
+ * Function to fetch a new hero from the Stratz API and update the hero section with the new hero's information.
+ */
 function pickNewHero() {
     let newHero = getNewHeroStratz();
     console.log(newHero);
@@ -28,33 +31,53 @@ function pickNewHero() {
     changeHeroSectionColor(newHero);
 }
 
+/**
+ * Function to fetch a new hero from the Stratz API.
+ * @returns {Promise} - A promise that resolves to a random hero object from the Stratz API.
+ */
 function getNewHeroStratz() {
     return fetch(stratz, {headers: stratzHeaders})
-                    .then(response => response.json())
-                    .then((data) => {
-                        keys = Object.keys(data);
-                        return data[keys[Math.floor(Math.random() * (keys.length - 2)) + 1]]}) // +1 to avoid the first key which is a null hero and -2 to avoid the last key which is a dummy hero.
-                    .catch(error => console.log(error));
-                }
+        .then(response => response.json())
+        .then((data) => {
+            keys = Object.keys(data);
+            return data[keys[Math.floor(Math.random() * (keys.length - 2)) + 1]]}) // +1 to avoid the first key which is a null hero and -2 to avoid the last key which is a dummy hero.
+        .catch(error => console.log(error));
+    }
 
+/**
+ * Function to update the hero image in the hero section.
+ * @param {Promise} newHero - A promise that resolves to a random hero object from the Stratz API.
+ */
 function changeHeroImage(newHero) {
     newHero.then(data => {
         heroImage.src = cloudflare + data.shortName + '.png';
     });
 }
 
+/**
+ * Function to update the hero name in the hero section.
+ * @param {Promise} newHero - A promise that resolves to a random hero object from the Stratz API.
+ */
 function changeHeroName(newHero) {
     newHero.then(data => {
         heroName.textContent = data.displayName;
     });
 }
 
+/**
+ * Function to update the hero description in the hero section.
+ * @param {Promise} newHero - A promise that resolves to a random hero object from the Stratz API.
+ */
 function changeHeroDescription(newHero) {
     newHero.then(data => {
         heroDescription.innerHTML = data.language.hype.replace(/<b>|<\/b>/g, '');
     });
 }
 
+/**
+ * Function to update the hero section color based on the hero's primary attribute.
+ * @param {Promise} newHero - A promise that resolves to a random hero object from the Stratz API.
+ */
 function changeHeroSectionColor(newHero) {
     let color;
     let orientation = '180deg';
@@ -85,6 +108,10 @@ function changeHeroSectionColor(newHero) {
     });
 }
 
+/**
+ * function to get the appropriate CSS linear-gradient prefix for the current browser.
+ * @returns {string} - The appropriate CSS linear-gradient prefix for the current browser.
+ */
 function getCssValuePrefix()
 {
     var rtrnVal = '';//default to standard syntax
