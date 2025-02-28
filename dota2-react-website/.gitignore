@@ -1,0 +1,5 @@
+node_modules
+public/bundle*
+
+# Ignoring this because it has my API key in it
+secrets.js

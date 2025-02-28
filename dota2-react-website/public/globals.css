@@ -1,0 +1,27 @@
+.centered {
+    text-align: center;
+}
+
+#main {
+    background-color: #f0f0f0;
+    padding-top: 10px;
+    padding-bottom: 40px;
+    border-radius: 10px;
+}
+
+.text-white {
+    color: white;
+}
+
+.btn {
+    background-color: #4CAF50;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 10px;
+}
