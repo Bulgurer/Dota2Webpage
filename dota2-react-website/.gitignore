@@ -1,0 +1,4 @@
+node_modules
+public/bundle*
+public/env.js
+.env
