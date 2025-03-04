@@ -1,19 +1,26 @@
 import { useState, useEffect } from "react";
 import "./HeroSection.css";
+
 import env from "react-dotenv";
 
-export default function HeroSection({ image, name, description }) {
+const green = "#008000";
+const blue = "#091279";
+const red = "#7C0A02";
+const white = "#FFFFFF";
+const black = "#000000";
+
+export default function HeroSection({ image, name, description, attribute }) {
   const [currentHero, setCurrentHero] = useState({
     image: image,
     name: name,
     description: description,
-    attribute: 1,
+    attribute: attribute,
   });
   const [history, setHistory] = useState([currentHero]);
   const [colors, setColors] = useState({
-    color3: "#7C0A02",
-    color2: "#091279",
-    color1: "#008000",
+    color3: black,
+    color2: black,
+    color1: black,
   });
 
   function handleClick() {
@@ -42,10 +49,10 @@ export default function HeroSection({ image, name, description }) {
 
   function handleColors(attribute) {
     let newColors;
-    let green = "#008000";
-    let blue = "#091279";
-    let red = "#7C0A02";
     switch (attribute) {
+      case -1: // Default
+        newColors = { color3: black, color2: black, color1: black };
+        break;
       case 0: // Strength
         newColors = { color3: red, color2: red, color1: red };
         break;
@@ -82,7 +89,7 @@ export default function HeroSection({ image, name, description }) {
   return (
     <section
       id="hero-section"
-      className="centered"
+      className="centeredVertical"
       style={{
         background: `linear-gradient(
         ${"90deg"}, 

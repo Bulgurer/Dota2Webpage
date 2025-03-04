@@ -1,6 +1,4 @@
 node_modules
 public/bundle*
+public/env.js
 .env
-
-# Ignoring this because it has my API key in it
-secrets.js
