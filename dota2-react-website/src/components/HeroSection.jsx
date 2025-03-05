@@ -1,100 +1,83 @@
 import { useState, useEffect } from "react";
 import "./HeroSection.css";
 
-import env from "react-dotenv";
+const Colors = Object.freeze({
+  GREEN: "#008000",
+  BLUE: "#091279",
+  RED: "#7C0A02",
+  WHITE: "#FFFFFF",
+  BLACK: "#000000",
+});
 
-const green = "#008000";
-const blue = "#091279";
-const red = "#7C0A02";
-const white = "#FFFFFF";
-const black = "#000000";
+const Attributes = Object.freeze({
+  DEF: "DEF", // Default
+  STR: "STR", // Strength
+  AGI: "AGI", // Agility
+  INT: "INT", // Intelligence
+  UNI: "ALL", // Universal
+});
 
-export default function HeroSection({ image, name, description, attribute }) {
-  const [currentHero, setCurrentHero] = useState({
-    image: image,
-    name: name,
-    description: description,
-    attribute: attribute,
-  });
-  const [history, setHistory] = useState([currentHero]);
+export default function HeroSection({ currentHero, onButtonClick }) {
   const [colors, setColors] = useState({
-    color3: black,
-    color2: black,
-    color1: black,
+    color3: Colors.BLACK,
+    color2: Colors.BLACK,
+    color1: Colors.BLACK,
   });
-
-  function handleClick() {
-    console.log("New hero button clicked");
-    let newHeroPromise = getNewHeroStratz();
-    newHeroPromise.then((data) => {
-      let newImage =
-        window.env.REACT_APP_CLOUDFLARE_URL + data.shortName + ".png"; // New hero image
-      let newName = data.displayName; // New hero name
-      let newDescription = data.language.hype.replace(/<b>|<\/b>/g, ""); // New hero description
-      let newAttribute = data.stat.heroPrimaryAttribute; // New hero attribute
-      let newHero = {
-        // New hero object
-        image: newImage,
-        name: newName,
-        description: newDescription,
-        attribute: newAttribute,
-      };
-      setHistory([...history, newHero]); //Add new hero to history
-      setCurrentHero(newHero); // Set new hero as current hero
-      handleColors(newHero.attribute); // Change hero section color
-      console.log(currentHero);
-      console.log(history);
-    });
-  }
+  useEffect(() => {
+    handleColors(currentHero.attribute);
+  }, [currentHero.attribute]);
 
   function handleColors(attribute) {
     let newColors;
     switch (attribute) {
-      case -1: // Default
-        newColors = { color3: black, color2: black, color1: black };
+      case Attributes.DEF: // Default
+        newColors = {
+          color3: Colors.BLACK,
+          color2: Colors.BLACK,
+          color1: Colors.BLACK,
+        };
         break;
-      case 0: // Strength
-        newColors = { color3: red, color2: red, color1: red };
+      case Attributes.STR: // Strength
+        newColors = {
+          color3: Colors.RED,
+          color2: Colors.RED,
+          color1: Colors.RED,
+        };
         break;
-      case 1: // Agility
-        newColors = { color3: green, color2: green, color1: green };
+      case Attributes.AGI: // Agility
+        newColors = {
+          color3: Colors.GREEN,
+          color2: Colors.GREEN,
+          color1: Colors.GREEN,
+        };
         break;
-      case 2: // Intelligence
-        newColors = { color3: blue, color2: blue, color1: blue };
+      case Attributes.INT: // Intelligence
+        newColors = {
+          color3: Colors.BLUE,
+          color2: Colors.BLUE,
+          color1: Colors.BLUE,
+        };
         break;
-      case 3: // Universal
-        newColors = { color3: green, color2: blue, color1: red };
+      case Attributes.UNI: // Universal
+        newColors = {
+          color3: Colors.GREEN,
+          color2: Colors.BLUE,
+          color1: Colors.RED,
+        };
         break;
     }
     setColors(newColors);
   }
 
-  function getNewHeroStratz() {
-    console.log(window.env.REACT_APP_STRATZ_HERO_URL);
-    return fetch(window.env.REACT_APP_STRATZ_HERO_URL, {
-      headers: new Headers({
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + window.env.REACT_APP_STRATZ_API_KEY,
-        UserAgent: "STRATZ_API",
-      }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        let keys = Object.keys(data);
-        return data[keys[Math.floor(Math.random() * (keys.length - 2)) + 1]];
-      })
-      .catch((error) => console.log(error));
-  }
-
   return (
     <section
       id="hero-section"
-      className="centeredVertical"
+      className="centeColors.REDVertical"
       style={{
         background: `linear-gradient(
         ${"90deg"}, 
         ${colors.color1}, 
-        ${colors.color2}, 
+        ${colors.color2},  
         ${colors.color3})`,
       }}
     >
@@ -105,7 +88,7 @@ export default function HeroSection({ image, name, description, attribute }) {
       <p id="hero-description" className="text-white">
         {currentHero.description}
       </p>
-      <NewHeroButton onButtonClick={handleClick} />
+      <NewHeroButton onButtonClick={onButtonClick} />
     </section>
   );
 }
