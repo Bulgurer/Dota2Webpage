@@ -5,6 +5,9 @@ import HeroSection from "./components/HeroSection.jsx";
 import env from "react-dotenv";
 import SkillBuild from "./components/SkillBuild.jsx";
 
+const DEBUG_MODE = false; //  use for when you want the button to only ever return a specific hero.
+const DEBUG_HERO_ID = 96; // the id of the hero you want to debug
+
 export default function App() {
   const [allHeroIds, setAllHeroIds] = useState([]);
 
@@ -30,24 +33,25 @@ export default function App() {
       .then((data) => {
         let heroes = data.data.constants.heroes;
         let heroIds = heroes.map((hero) => hero.id);
-        console.log(heroIds);
         setAllHeroIds(heroIds); // for some reason the hero ids jump around in value, array.length - 1 is NOT the same as the highest ID
       })
       .catch((error) => console.log(error));
   }, []);
 
   const [currentHero, setCurrentHero] = useState({
-    id: null, // Default hero id
+    id: 0, // Default hero id
     image: "https://img.icons8.com/color/512/dota.png", // Default hero image
     name: "Dota 2", // Default hero name
     description: "Click the 'New hero' button to get started!", // Default hero description
     attribute: "DEF", // Default hero attribute
+    abilitiesInfo: null, // Default info on hero abilities (slot, ability)
   });
   const [history, setHistory] = useState([currentHero]);
 
   function handleClick() {
-    let newHeroId =
-      allHeroIds[Math.floor(Math.random() * (allHeroIds.length - 1))];
+    let newHeroId = DEBUG_MODE
+      ? DEBUG_HERO_ID
+      : allHeroIds[Math.floor(Math.random() * (allHeroIds.length - 1))];
     console.log("-".repeat(100));
     let newHeroPromise = getNewHeroStratz(newHeroId);
     newHeroPromise.then((data) => {
@@ -56,17 +60,17 @@ export default function App() {
       let newName = data.displayName; // New hero name
       let newDescription = data.language.hype.replace(/<b>|<\/b>/g, ""); // New hero description
       let newAttribute = data.stats.primaryAttributeEnum; // New hero attribute
+      let newAbilitiesInfo = data.abilities; // New hero abilities
       let newHero = {
         // New hero object
         image: newImage,
         name: newName,
         description: newDescription,
         attribute: newAttribute,
+        abilitiesInfo: newAbilitiesInfo,
       };
       setHistory([...history, newHero]); //Add new hero to history
       setCurrentHero(newHero); // Set new hero as current hero
-      console.log(currentHero);
-      console.log(history);
     });
   }
 
@@ -79,14 +83,13 @@ export default function App() {
         <HeroSection currentHero={currentHero} onButtonClick={handleClick} />
       </div>
       <div id="build" className="centeredHorizontal">
-        <SkillBuild />
+        <SkillBuild abilitiesInfo={currentHero.abilitiesInfo} />
       </div>
     </main>
   );
 }
 
 function getNewHeroStratz(newHeroId) {
-  console.log("The new Hero ID is: " + newHeroId);
   return fetch("https://api.stratz.com/graphql", {
     method: "POST",
     headers: {
@@ -106,6 +109,21 @@ function getNewHeroStratz(newHeroId) {
             stats{
               primaryAttributeEnum
             }
+            abilities{
+              slot
+              ability {
+                id
+                language{
+                  attributes
+                }
+                name
+                stat{
+                  isInnate
+                  isGrantedByShard
+                  isGrantedByScepter
+                }
+              }
+            }
           }
         }
       }`,
@@ -113,7 +131,6 @@ function getNewHeroStratz(newHeroId) {
   })
     .then((response) => response.json())
     .then((data) => {
-      console.log(data.data.constants.hero);
       return data.data.constants.hero;
     })
     .catch((error) => console.log(error));
