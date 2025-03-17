@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import CreateButton from "./CreateButton.jsx";
 import "./HeroSection.css";
 
 const Colors = Object.freeze({
@@ -17,7 +18,11 @@ const Attributes = Object.freeze({
   UNI: "ALL", // Universal
 });
 
-export default function HeroSection({ currentHero, onButtonClick }) {
+export default function HeroSection({
+  currentHero,
+  onButtonClick,
+  inDebugMode,
+}) {
   const [colors, setColors] = useState({
     color3: Colors.BLACK,
     color2: Colors.BLACK,
@@ -85,18 +90,42 @@ export default function HeroSection({ currentHero, onButtonClick }) {
       <h2 id="hero-name" className="text-white">
         {currentHero.name}
       </h2>
+      {inDebugMode ? <p>{currentHero.id}</p> : null}
       <p id="hero-description" className="text-white">
         {currentHero.description}
       </p>
-      <NewHeroButton onButtonClick={onButtonClick} />
+      {inDebugMode ? (
+        <CreateButton
+          onButtonClick={onButtonClick}
+          identifier={1}
+          text={"Previous hero"}
+        />
+      ) : null}
+      <CreateButton
+        onButtonClick={onButtonClick}
+        identifier={2}
+        text={"New hero"}
+      />
+      {inDebugMode ? (
+        <CreateButton
+          onButtonClick={onButtonClick}
+          identifier={3}
+          text={"Next hero"}
+        />
+      ) : null}
     </section>
   );
 }
 
-function NewHeroButton({ onButtonClick }) {
-  return (
-    <button id="button-new-hero" className="btn" onClick={onButtonClick}>
-      New hero
-    </button>
-  );
-}
+// function CreateButton({ onButtonClick, key, text }) {
+//   const [key, setkey] = useState(key);
+//   return (
+//     <button
+//       id="button-new-hero"
+//       className="btn"
+//       onClick={() => onButtonClick(key)}
+//     >
+//       {text}
+//     </button>
+//   );
+// }
