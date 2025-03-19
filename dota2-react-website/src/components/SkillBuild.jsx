@@ -1,3 +1,6 @@
+import env from "react-dotenv";
+import "./SkillBuild.css";
+
 export default function SkillBuild({ abilitiesInfo }) {
   let relevantAbilities = abilitiesInfo
     ? DecideAbilitiesToKeep(abilitiesInfo)
@@ -6,13 +9,24 @@ export default function SkillBuild({ abilitiesInfo }) {
     return;
   }
   const abilityNames = relevantAbilities.map((abilitiesInfo) => (
-    <li key={abilitiesInfo.slot}>{abilitiesInfo.ability.name}</li>
+    <div key={abilitiesInfo.slot}>
+      <img
+        id="hero-ability"
+        src={
+          window.env.REACT_APP_ABILITES_IMAGES_URL +
+          abilitiesInfo.ability.name +
+          ".png"
+        }
+        alt="Hero Ability"
+      />
+      <p>{abilitiesInfo.ability.name}</p>
+    </div>
   )); // Populate with ability names/icons if available
   return (
-    <div>
+    <span id="skill-build">
       <h1>Skill Build</h1>
-      <ol>{abilityNames}</ol>
-    </div>
+      <span>{abilityNames}</span>
+    </span>
   );
 }
 

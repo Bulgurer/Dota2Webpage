@@ -6,7 +6,7 @@ import env from "react-dotenv";
 import SkillBuild from "./components/SkillBuild.jsx";
 
 const DEBUG_MODE = true; //  use for when you want the button to only ever return a specific hero.
-const DEBUG_HERO_ID = 96; // the id of the hero you want to debug
+const DEBUG_HERO_ID = 1; // the id of the hero you want to debug
 
 export default function App() {
   let newHero = {
@@ -114,9 +114,9 @@ export default function App() {
           inDebugMode={DEBUG_MODE}
         />
       </div>
-      <div id="build" className="centeredHorizontal">
+      <span id="build" className="centeredHorizontal">
         <SkillBuild abilitiesInfo={currentHero.abilitiesInfo} />
-      </div>
+      </span>
     </main>
   );
 }

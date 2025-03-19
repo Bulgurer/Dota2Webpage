@@ -1,0 +1,14 @@
+#hero-ability {
+    width: 100%;
+    max-width: 100px;
+}
+
+#skill-build {
+    width: 100%;
+}
+
+li {
+    list-style: none;
+    float: left;
+}
+
