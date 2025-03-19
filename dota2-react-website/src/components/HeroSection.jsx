@@ -90,7 +90,9 @@ export default function HeroSection({
       <h2 id="hero-name" className="text-white">
         {currentHero.name}
       </h2>
-      {inDebugMode ? <p>{currentHero.id}</p> : null}
+      {inDebugMode ? (
+        <p className="text-white">{"id: " + currentHero.id}</p>
+      ) : null}
       <p id="hero-description" className="text-white">
         {currentHero.description}
       </p>

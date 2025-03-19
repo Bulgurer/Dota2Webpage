@@ -9,6 +9,16 @@ const DEBUG_MODE = true; //  use for when you want the button to only ever retur
 const DEBUG_HERO_ID = 96; // the id of the hero you want to debug
 
 export default function App() {
+  let newHero = {
+    id: 0, // Default hero id
+    image: "https://img.icons8.com/color/512/dota.png", // Default hero image
+    name: "Dota 2", // Default hero name
+    description: "Click the 'New hero' button to get started!", // Default hero description
+    attribute: "DEF", // Default hero attribute
+    abilitiesInfo: null, // Default info on hero abilities (slot, ability)
+  };
+  const [currentHero, setCurrentHero] = useState(newHero);
+
   const [IDButtonClicked, setIDButtonClicked] = useState(0); // 0 is the default, if a button is given the identifier of 0 it will be ignored
   useEffect(() => {
     if (IDButtonClicked) {
@@ -40,29 +50,30 @@ export default function App() {
         let heroes = data.data.constants.heroes;
         let heroIds = heroes.map((hero) => hero.id);
         setAllHeroIds(heroIds); // for some reason the hero ids jump around in value, array.length - 1 is NOT the same as the highest ID
+        // This kinda sucks and is ugly but it works for now. I hate that it overwrites the default hero but at least its only when debugging.
+        if (DEBUG_MODE) {
+          setNewHero(
+            DEBUG_HERO_ID,
+            heroIds.findIndex((element) => element === DEBUG_HERO_ID)
+          ).then((data) => {
+            setCurrentHero(data); // Set new hero as current hero
+          });
+        }
       })
       .catch((error) => console.log(error));
   }, []);
 
-  const [currentHero, setCurrentHero] = useState({
-    id: 0, // Default hero id
-    image: "https://img.icons8.com/color/512/dota.png", // Default hero image
-    name: "Dota 2", // Default hero name
-    description: "Click the 'New hero' button to get started!", // Default hero description
-    attribute: "DEF", // Default hero attribute
-    abilitiesInfo: null, // Default info on hero abilities (slot, ability)
-  });
+  useEffect(() => {
+    if (DEBUG_MODE) {
+      setNewHero(DEBUG_HERO_ID, 0).then((data) => {
+        setCurrentHero(data); // Set new hero as current hero
+      });
+    }
+  }, []);
+
   const [history, setHistory] = useState([currentHero]);
-  // if (DEBUG_MODE) {
 
-  //   let newHero = setNewHero(
-  //     DEBUG_HERO_ID,
-  //     allHeroIds.findIndex((element) => element === DEBUG_HERO_ID)
-  //   );
-  //   setCurrentHero(newHero); // Set new hero as current hero
-  // }
-
-  function handleClick() {
+  async function handleClick() {
     let newHeroIDIndex;
     switch (IDButtonClicked) {
       case 1: //Previous Hero Button
@@ -81,14 +92,14 @@ export default function App() {
         else newHeroIDIndex = currentHero.idIndex + 1; // next index
         break;
     }
+    // In retrospect, this is really bad because it causes a re-render of basically the entire website.
+    // I was not aware that changing state causes a re-render so thats my bad.
     setIDButtonClicked(0); //Resetting the id of the button clicked so that the buttons actually work
     let newHeroID = allHeroIds[newHeroIDIndex];
     console.log("-".repeat(100));
-    let newHero = setNewHero(newHeroID, newHeroIDIndex);
-    newHero.then((data) => {
-      setHistory([...history, data]); //Add new hero to history
-      setCurrentHero(data); // Set new hero as current hero
-    });
+    let newHero = await setNewHero(newHeroID, newHeroIDIndex);
+    setHistory([...history, newHero]); //Add new hero to history
+    setCurrentHero(newHero); // Set new hero as current hero
   }
 
   return (
@@ -110,7 +121,7 @@ export default function App() {
   );
 }
 
-function setNewHero(newHeroID, newHeroIDIndex) {
+async function setNewHero(newHeroID, newHeroIDIndex) {
   let newHeroPromise = getNewHeroStratz(newHeroID);
   console.log("newHeroID: " + newHeroID);
   console.log("newHeroIDIndex: " + newHeroIDIndex);
@@ -135,8 +146,8 @@ function setNewHero(newHeroID, newHeroIDIndex) {
   });
 }
 
-function getNewHeroStratz(newHeroId) {
-  return fetch("https://api.stratz.com/graphql", {
+async function getNewHeroStratz(newHeroId) {
+  return await fetch("https://api.stratz.com/graphql", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
