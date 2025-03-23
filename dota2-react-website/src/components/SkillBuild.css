@@ -1,14 +1,32 @@
 #hero-ability {
     width: 100%;
-    max-width: 100px;
+    max-width: 90px;
+    border-style: solid;
+    border-width: 2px;
+    border-radius: 10px;
 }
 
-#skill-build {
+.ability-container, img {
+    vertical-align: middle;
+    margin: 10px;
+    margin-left: 20px;
+    margin-right: 20px;
     width: 100%;
 }
 
-li {
-    list-style: none;
-    float: left;
+#abilities-container {
+    display: block;
 }
 
+#skill-build {
+    background-color: aliceblue;
+    border-radius: 10px;
+    padding: 20px;
+    margin-top: 20px;
+    margin-inline: 20px;
+    border-radius: 10px;
+    height: 100%;
+    max-width: 800px;
+    min-width: 600px;
+    
+}

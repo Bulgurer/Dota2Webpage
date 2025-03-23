@@ -107,19 +107,19 @@ export default function App() {
       <header>
         <h1 id="title">Dota 2 Hero Viewer</h1>
       </header>
-      <div id="hero-sections">
+      <div id="main-section">
         <HeroSection
           currentHero={currentHero}
           onButtonClick={setIDButtonClicked}
           inDebugMode={DEBUG_MODE}
         />
-      </div>
-      <span id="build" className="centeredHorizontal">
         <SkillBuild abilitiesInfo={currentHero.abilitiesInfo} />
-      </span>
+      </div>
     </main>
   );
 }
+
+//--------------------- Helper Functions ---------------------
 
 async function setNewHero(newHeroID, newHeroIDIndex) {
   let newHeroPromise = getNewHeroStratz(newHeroID);
@@ -172,6 +172,7 @@ async function getNewHeroStratz(newHeroId) {
                 id
                 language{
                   attributes
+                  displayName
                 }
                 name
                 stat{

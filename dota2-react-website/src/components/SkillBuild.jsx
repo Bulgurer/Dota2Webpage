@@ -9,24 +9,26 @@ export default function SkillBuild({ abilitiesInfo }) {
     return;
   }
   const abilityNames = relevantAbilities.map((abilitiesInfo) => (
-    <div key={abilitiesInfo.slot}>
-      <img
-        id="hero-ability"
-        src={
-          window.env.REACT_APP_ABILITES_IMAGES_URL +
-          abilitiesInfo.ability.name +
-          ".png"
-        }
-        alt="Hero Ability"
-      />
-      <p>{abilitiesInfo.ability.name}</p>
-    </div>
+    <tr key={abilitiesInfo.slot} className="ability-container">
+      <td>{abilitiesInfo.ability.language.displayName}</td>
+      <td>
+        <img
+          id="hero-ability"
+          src={
+            window.env.REACT_APP_ABILITES_IMAGES_URL +
+            abilitiesInfo.ability.name +
+            ".png"
+          }
+          alt="Hero Ability"
+        />
+      </td>
+    </tr>
   )); // Populate with ability names/icons if available
   return (
-    <span id="skill-build">
+    <div id="skill-build">
       <h1>Skill Build</h1>
-      <span>{abilityNames}</span>
-    </span>
+      <table id="abilities-container">{abilityNames}</table>
+    </div>
   );
 }
 
